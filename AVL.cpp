@@ -15,15 +15,6 @@ void gotoxy(int column, int line)
 	);
 }
 
-void AVL::LNR(Node* n) //recursively prints tree in LNR order
-{
-	if (n->left != nullptr)
-		LNR(n->left);
-	cout << n->num << " ";
-	if (n->right != nullptr)
-		LNR(n->right);
-}
-
 void AVL::NLR(Node* n) //recursively prints tree in NLR order
 {
 	cout << n->num << " ";
@@ -31,6 +22,15 @@ void AVL::NLR(Node* n) //recursively prints tree in NLR order
 		NLR(n->left);
 	if (n->right != nullptr)
 		NLR(n->right);
+}
+
+void AVL::LNR(Node* n) //recursively prints tree in LNR order
+{
+	if (n->left != nullptr)
+		LNR(n->left);
+	cout << n->num << " ";
+	if (n->right != nullptr)
+		LNR(n->right);
 }
 
 void AVL::LRN(Node* n) //recursively prints tree in LRN order
@@ -97,7 +97,6 @@ void AVL::displayTree(Node* r, int x, int y, int width)
 	else {
 		cout << r->num;
 	}
-	//Sleep(1500);
 	displayTree(r->right, x + width, y + 3, width / 2);
 	displayTree(r->left, x - width, y + 3, width / 2);
 }
@@ -123,8 +122,9 @@ void AVL::menu()
 		"E: Exit \n";
 }
 
-void AVL::menuChoice()
+bool AVL::run()
 {
+	menu();
 	while (1)
 	{
 		cout << endl << "Enter a Command: ";
@@ -146,8 +146,8 @@ void AVL::menuChoice()
 			system("cls");
 			menu();
 			displayTree(root, 110, 20, 20);
-			cout << endl << endl << endl << endl << endl << endl << endl << "LNR: ";
-			LNR(root);
+			cout << endl << endl << endl << endl << endl << endl << endl << "Preorder: ";
+			NLR(root);
 			cout << endl << endl << endl << endl << endl;
 		}
 
@@ -157,8 +157,8 @@ void AVL::menuChoice()
 			system("cls");
 			menu();
 			displayTree(root, 110, 20, 20);
-			cout << endl << endl << endl << endl << endl << endl << endl << "NLR: ";
-			NLR(root);
+			cout << endl << endl << endl << endl << endl << endl << endl << "Inorder: ";
+			LNR(root);
 			cout << endl << endl << endl << endl << endl;
 		}
 
@@ -168,17 +168,16 @@ void AVL::menuChoice()
 			system("cls");
 			menu();
 			displayTree(root, 110, 20, 20);
-			cout << endl << endl << endl << endl << endl << endl << endl << "LRN: ";
+			cout << endl << endl << endl << endl << endl << endl << endl << "Postorder: ";
 			LRN(root);
 			cout << endl << endl << endl << endl << endl;
 		}
-
 		else if (choice == 'E' || choice == 'e')
-			exit(0);
+			return false;
 	}
 }
 
-struct AVL::Node* AVL::buildTree(int n, Node* r)
+struct AVL::Node* AVL::buildTree(int n, Node* r) //insert a node into the tree then balance it
 {
 	//builds the root
 	if (r == nullptr)
@@ -206,30 +205,30 @@ struct AVL::Node* AVL::leftLeftRotate(Node* r)
 {
 	//Returns the tree node resulting from
 	// a left rotation.
-	Node* S = r->right;
-	Node* B = S->left;
-	S->left = r;
+	Node* A = r->right;
+	Node* B = A->left;
+	A->left = r;
 	r->right = B;
-	return S;
+	return A;
 }
 
 struct AVL::Node* AVL::rightRightRotate(Node* r)
 {
 	// Returns the tree node resulting from
 	// a right rotation.
-	Node* S = r->left;
-	Node* B = S->right;
-	S->right = r;
+	Node* A = r->left;
+	Node* B = A->right;
+	A->right = r;
 	r->left = B;
-	return S;
+	return A;
 }
 
 struct AVL::Node* AVL::leftRightRotate(Node* r)
 {
 	// Returns the tree node resulting from a
 	// right-left rotation.
-	Node* S = r->left;
-	r->left = leftLeftRotate(S);
+	Node* A = r->left;
+	r->left = leftLeftRotate(A);
 	return rightRightRotate(r);
 }
 
@@ -237,8 +236,8 @@ struct AVL::Node* AVL::rightLeftRotate(Node* r)
 {
 	// Returns the tree node resulting from a
 	// right-left rotation.
-	Node* S = r->right;
-	r->right = rightRightRotate(S);
+	Node* A = r->right;
+	r->right = rightRightRotate(A);
 	return leftLeftRotate(r);
 }
 
@@ -264,12 +263,12 @@ struct AVL::Node* AVL::balanceTree(Node* r)
 		return r;
 }
 
-int AVL::Difference(Node* r)
+int AVL::Difference(Node* r) //takes the difference between the left and right height of a node
 {
 	return (height(r->left) - height(r->right));
 }
 
-int AVL::height(Node* r) const
+int AVL::height(Node* r) const //checks the height of each node
 {
 	if (r == nullptr)
 		return 0;
@@ -283,41 +282,3 @@ int AVL::height(Node* r) const
 			return heightRight + 1;
 	}
 }
-
-//Deletes the node input by the user//
-//struct AVL::Node* AVL::DEL(int removeNumber, Node* r)
-//{
-//	//base case
-//	if (r == nullptr)
-//		return r;
-//
-//	//if the number we're trying to remove is smaller than the current number we're looking at, it is in the left subtree
-//	if (removeNumber < r->num)
-//		r->left = DEL(removeNumber, r->left);
-//
-//	//if the number we're trying to remove is larger than the current number we're looking at, it is in the right subtree
-//	else if (removeNumber > r->num)
-//		r->right = DEL(removeNumber, r->right);
-//
-//	//Once we've found the node containing the value we're trying to delete, check if the node has 2, 1 or 0 children
-//	else
-//	{
-//		// if the right or left node does not contain a child
-//		if (r->left == nullptr)
-//			return r->right;
-//		else if (r->right == nullptr)
-//			return r->left;
-//
-//		// if there is a parent with two children, replace it with the node that is one left, and all the way to the right
-//		Node* temp = r->left;
-//
-//		//loop down to find the rightmost leaf
-//		while (temp->right != nullptr)
-//			temp = temp->right;
-//
-//		// take that node and replace its value with the one that is being deleted, then delete the leaf that was used to replace the "delete" node
-//		r->num = temp->num;
-//		r->left = DEL(temp->num, r->left);
-//	}
-//	return r;
-//}

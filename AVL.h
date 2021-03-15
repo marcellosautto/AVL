@@ -27,12 +27,12 @@ public:
 		};
 	}*root;
 
+	bool run();
 	AVL();
 	void LNR(Node* n),
 		NLR(Node* n),
 		LRN(Node* n),
 		menu(),
-		menuChoice(),
 		displayTree(Node* r, int x, int y, int width);
 	struct Node* buildTree(int n, Node* r);
 	struct Node* rightRightRotate(Node* r);
