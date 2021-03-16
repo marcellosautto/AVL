@@ -8,6 +8,9 @@ int main()
 	cout << endl << "LOADING...";
 	Sleep(2000);
 	system("cls");
-	avl.run();
+	avl.menu();
+	while (avl.choice != 'E' && avl.choice != 'e')
+		avl.run();
+
 	return 0;
 }

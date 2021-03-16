@@ -94,7 +94,8 @@ void AVL::displayTree(Node* r, int x, int y, int width)
 			cout << " ";
 		cout << "|";
 	}
-	else {
+	else
+	{
 		cout << r->num;
 	}
 	displayTree(r->right, x + width, y + 3, width / 2);
@@ -124,57 +125,55 @@ void AVL::menu()
 
 bool AVL::run()
 {
-	menu();
-	while (1)
+	cout << endl << "Enter a Command: ";
+	cin >> choice;
+
+	if (choice == 'A' || choice == 'a') //Prompts user to insert node
 	{
-		cout << endl << "Enter a Command: ";
-		cin >> choice;
-
-		if (choice == 'A' || choice == 'a') //Prompts user to insert node
-		{
-			cout << endl << "Enter the Number You Want to Insert: " << endl;
-			cin >> addNum;
-			buildTree(addNum, root);
-			system("cls");
-			menu();
-			displayTree(root, 110, 20, 20);
-			cout << endl << endl << endl << endl << endl;
-		}
-		else if (choice == 'B' || choice == 'b') //print Tree with LNR order output
-		{
-			//readFile();
-			system("cls");
-			menu();
-			displayTree(root, 110, 20, 20);
-			cout << endl << endl << endl << endl << endl << endl << endl << "Preorder: ";
-			NLR(root);
-			cout << endl << endl << endl << endl << endl;
-		}
-
-		else if (choice == 'C' || choice == 'c')//print Tree with NLR order output
-		{
-			//readFile();
-			system("cls");
-			menu();
-			displayTree(root, 110, 20, 20);
-			cout << endl << endl << endl << endl << endl << endl << endl << "Inorder: ";
-			LNR(root);
-			cout << endl << endl << endl << endl << endl;
-		}
-
-		else if (choice == 'D' || choice == 'd')//print Tree with LRN order output
-		{
-			//readFile();
-			system("cls");
-			menu();
-			displayTree(root, 110, 20, 20);
-			cout << endl << endl << endl << endl << endl << endl << endl << "Postorder: ";
-			LRN(root);
-			cout << endl << endl << endl << endl << endl;
-		}
-		else if (choice == 'E' || choice == 'e')
-			return false;
+		cout << endl << "Enter the Number You Want to Insert: " << endl;
+		cin >> addNum;
+		root = buildTree(addNum, root);
+		system("cls");
+		menu();
+		displayTree(root, 110, 20, 20);
+		cout << endl << endl << endl << endl << endl;
 	}
+	else if (choice == 'B' || choice == 'b') //print Tree with LNR order output
+	{
+		//readFile();
+		system("cls");
+		menu();
+		displayTree(root, 110, 20, 20);
+		cout << endl << endl << endl << endl << endl << endl << endl << "Preorder: ";
+		NLR(root);
+		cout << endl << endl << endl << endl << endl;
+	}
+
+	else if (choice == 'C' || choice == 'c')//print Tree with NLR order output
+	{
+		//readFile();
+		system("cls");
+		menu();
+		displayTree(root, 110, 20, 20);
+		cout << endl << endl << endl << endl << endl << endl << endl << "Inorder: ";
+		LNR(root);
+		cout << endl << endl << endl << endl << endl;
+	}
+
+	else if (choice == 'D' || choice == 'd')//print Tree with LRN order output
+	{
+		//readFile();
+		system("cls");
+		menu();
+		displayTree(root, 110, 20, 20);
+		cout << endl << endl << endl << endl << endl << endl << endl << "Postorder: ";
+		LRN(root);
+		cout << endl << endl << endl << endl << endl;
+	}
+	else if (choice == 'E' || choice == 'e')
+		return false;
+
+	return true;
 }
 
 struct AVL::Node* AVL::buildTree(int n, Node* r) //insert a node into the tree then balance it
@@ -185,8 +184,6 @@ struct AVL::Node* AVL::buildTree(int n, Node* r) //insert a node into the tree t
 		Node* temp = new Node(n);
 		if (root == nullptr)
 			root = temp;
-		//else if (temp->left == root || temp->right == root)
-			//root = temp;
 		return temp;
 	}
 	//build the rest of the tree based on whether the nodes are greater or less than their parents
@@ -197,6 +194,7 @@ struct AVL::Node* AVL::buildTree(int n, Node* r) //insert a node into the tree t
 	else
 		return r;
 
+	//balance the tree once the new node is inserted
 	balanceTree(r);
 }
 
